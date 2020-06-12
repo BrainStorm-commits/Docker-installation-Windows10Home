@@ -1,0 +1,41 @@
+Install Hyper-V and Containers
+
+    Create a file called InstallHyperV.bat
+    Add this content:
+
+pushd "%~dp0"
+dir /b %SystemRoot%\servicing\Packages\*Hyper-V*.mum >hyper-v.txt
+for /f %%i in ('findstr /i . hyper-v.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i"
+del hyper-v.txt
+dism /online /enable-feature /featurename:Microsoft-Hyper-V -All /LimitAccess /ALL
+pause
+
+3. Run InstallHyperV.bat in administrator mode.
+
+4. Create a file called InstallContainers.bat
+
+5. Add this content:
+
+pushd "%~dp0"
+dir /b %SystemRoot%\servicing\Packages\*containers*.mum >containers.txt
+for /f %%i in ('findstr /i . containers.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i"
+del containers.txt
+dism /online /enable-feature /featurename:Containers -All /LimitAccess /ALL
+pause
+
+6. Run InstallContainers.bat in administrator mode.
+
+Update: A few users had problems with Medium formatting and wrapping of the script. If you have problems, try to copy from this gist instead.
+
+7. Restart your computer
+
+Ok great! Now that we have Hyper-V and Containers installed, it is time to trick Docker that we are running on Windows Pro. 😎
+Edit Windows Version in Registry
+
+    Press Windows + R and write regedit
+
+2. In the Registry Editor, go to \HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion
+
+3. Right-click on EditionID and Click Modify
+
+4. Change Value Data to Professional
